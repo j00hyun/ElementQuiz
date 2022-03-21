@@ -21,7 +21,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RH4-VK-HC4">
-                                <rect key="frame" x="215" y="472" width="127" height="31"/>
+                                <rect key="frame" x="207" y="472" width="143" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Next Element"/>
@@ -29,8 +29,8 @@
                                     <action selector="next:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ewH-Ip-r4y"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Answer Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aun-QD-cBi">
-                                <rect key="frame" x="119" y="348" width="152" height="29"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Answer Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="aun-QD-cBi">
+                                <rect key="frame" x="16" y="324" width="358" height="68"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
                                 <nil key="textColor"/>
@@ -51,7 +51,7 @@
                                 <rect key="frame" x="125" y="405" width="140" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="done"/>
                                 <connections>
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="hVi-6P-sx9"/>
                                 </connections>
@@ -73,6 +73,7 @@
                         <outlet property="answerLabel" destination="aun-QD-cBi" id="1Vg-RL-wLY"/>
                         <outlet property="imageView" destination="G8i-Ev-4KG" id="pbP-l1-1HR"/>
                         <outlet property="modeSelector" destination="Feo-Eb-x28" id="Lsg-yu-LqA"/>
+                        <outlet property="nextButton" destination="RH4-VK-HC4" id="7Sx-m1-riK"/>
                         <outlet property="showAnswerButton" destination="f0F-Ko-dIS" id="gMy-XP-Ewj"/>
                         <outlet property="textField" destination="CXy-zx-ocy" id="qOE-70-FnH"/>
                     </connections>

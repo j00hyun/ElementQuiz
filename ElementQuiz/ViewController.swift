@@ -25,8 +25,10 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var modeSelector: UISegmentedControl!
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var showAnswerButton: UIButton!
+    @IBOutlet weak var nextButton: UIButton!
     
-    let elementList = ["Carbon", "Gold", "Chlorine", "Sodium"]
+    let fixedElementList = ["Carbon", "Gold", "Chlorine", "Sodium"]
+    var elementList: [String] = []
     
     var currentElementIndex = 0
     var mode: Mode = .flashCard {
@@ -71,6 +73,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
         
         // 버튼
         showAnswerButton.isHidden = false
+        nextButton.isEnabled = true
+        nextButton.setTitle("Next Element", for: .normal)
         
         // 텍스트필드, 키보드
         /*
@@ -97,14 +101,31 @@ class ViewController: UIViewController, UITextFieldDelegate {
         // 버튼
         showAnswerButton.isHidden = true
         
+        if currentElementIndex == elementList.count - 1 {
+            nextButton.setTitle("Show Score", for: .normal)
+        } else {
+            nextButton.setTitle("Next Question", for: .normal)
+        }
+        
+        switch state {
+        case .question:
+            nextButton.isEnabled = false
+        case .answer:
+            nextButton.isEnabled = true
+        case .score:
+            nextButton.isEnabled = false
+        }
+        
         // 텍스트필드, 키보드
         textField.isHidden = false
         
         switch state {
         case .question:
+            textField.isEnabled = true
             textField.text = ""
             textField.becomeFirstResponder() // 키보드 띄우기
         case .answer:
+            textField.isEnabled = false
             textField.resignFirstResponder() // 키보드 숨김
         case .score:
             textField.isHidden = true
@@ -119,7 +140,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
             if answerIsCorrect {
                 answerLabel.text = "Correct!"
             } else {
-                answerLabel.text = "❌"
+                answerLabel.text = "❌\nCorrect Answer: " + elementName
             }
         case .score:
             answerLabel.text = ""
@@ -134,7 +155,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        updateUI()
+        mode = .flashCard
     }
 
     @IBAction func showAnswer(_ sender: UIButton) {
@@ -173,6 +194,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     func setupFlashCards() {
         state = .question
         currentElementIndex = 0
+        elementList = fixedElementList
     }
     
     // 퀴즈 모드 초기화
@@ -181,6 +203,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         currentElementIndex = 0
         answerIsCorrect = false
         correctAnswerCount = 0
+        elementList = fixedElementList.shuffled()
     }
     
     // 사용자가 키보드 엔터를 누르면 실행됨
