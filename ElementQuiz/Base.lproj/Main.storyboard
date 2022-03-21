@@ -43,12 +43,18 @@
                                     <segment title="Flash Cards"/>
                                     <segment title="Quiz"/>
                                 </segments>
+                                <connections>
+                                    <action selector="switchModes:" destination="BYZ-38-t0r" eventType="valueChanged" id="RZA-g5-jmF"/>
+                                </connections>
                             </segmentedControl>
                             <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="CXy-zx-ocy">
                                 <rect key="frame" x="125" y="405" width="140" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="hVi-6P-sx9"/>
+                                </connections>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f0F-Ko-dIS">
                                 <rect key="frame" x="52" y="472" width="125" height="31"/>
@@ -67,6 +73,7 @@
                         <outlet property="answerLabel" destination="aun-QD-cBi" id="1Vg-RL-wLY"/>
                         <outlet property="imageView" destination="G8i-Ev-4KG" id="pbP-l1-1HR"/>
                         <outlet property="modeSelector" destination="Feo-Eb-x28" id="Lsg-yu-LqA"/>
+                        <outlet property="showAnswerButton" destination="f0F-Ko-dIS" id="gMy-XP-Ewj"/>
                         <outlet property="textField" destination="CXy-zx-ocy" id="qOE-70-FnH"/>
                     </connections>
                 </viewController>
