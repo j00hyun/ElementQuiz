@@ -23,6 +23,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var answerLabel: UILabel!
     @IBOutlet weak var modeSelector: UISegmentedControl!
+    @IBOutlet weak var orderSelector: UISegmentedControl!
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var showAnswerButton: UIButton!
     @IBOutlet weak var nextButton: UIButton!
@@ -155,6 +156,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        elementList = fixedElementList
         mode = .flashCard
     }
 
@@ -183,6 +185,12 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func switchModes(_ sender: UISegmentedControl) {
+        if orderSelector.selectedSegmentIndex == 0 {
+            elementList = fixedElementList
+        } else {
+            elementList = fixedElementList.shuffled()
+        }
+        
         if modeSelector.selectedSegmentIndex == 0 {
             mode = .flashCard
         } else {
@@ -194,7 +202,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
     func setupFlashCards() {
         state = .question
         currentElementIndex = 0
-        elementList = fixedElementList
     }
     
     // 퀴즈 모드 초기화
@@ -203,7 +210,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
         currentElementIndex = 0
         answerIsCorrect = false
         correctAnswerCount = 0
-        elementList = fixedElementList.shuffled()
     }
     
     // 사용자가 키보드 엔터를 누르면 실행됨

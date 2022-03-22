@@ -44,7 +44,7 @@
                                     <segment title="Quiz"/>
                                 </segments>
                                 <connections>
-                                    <action selector="switchModes:" destination="BYZ-38-t0r" eventType="valueChanged" id="RZA-g5-jmF"/>
+                                    <action selector="switchModes:" destination="BYZ-38-t0r" eventType="valueChanged" id="Kex-vf-JT7"/>
                                 </connections>
                             </segmentedControl>
                             <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="CXy-zx-ocy">
@@ -56,6 +56,17 @@
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="hVi-6P-sx9"/>
                                 </connections>
                             </textField>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Ahp-1T-lpQ">
+                                <rect key="frame" x="104" y="104" width="183" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <segments>
+                                    <segment title="Predictable"/>
+                                    <segment title="Randomize"/>
+                                </segments>
+                                <connections>
+                                    <action selector="switchModes:" destination="BYZ-38-t0r" eventType="valueChanged" id="wA1-Kn-C35"/>
+                                </connections>
+                            </segmentedControl>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f0F-Ko-dIS">
                                 <rect key="frame" x="52" y="472" width="125" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -74,6 +85,7 @@
                         <outlet property="imageView" destination="G8i-Ev-4KG" id="pbP-l1-1HR"/>
                         <outlet property="modeSelector" destination="Feo-Eb-x28" id="Lsg-yu-LqA"/>
                         <outlet property="nextButton" destination="RH4-VK-HC4" id="7Sx-m1-riK"/>
+                        <outlet property="orderSelector" destination="Ahp-1T-lpQ" id="fke-Of-MYc"/>
                         <outlet property="showAnswerButton" destination="f0F-Ko-dIS" id="gMy-XP-Ewj"/>
                         <outlet property="textField" destination="CXy-zx-ocy" id="qOE-70-FnH"/>
                     </connections>
