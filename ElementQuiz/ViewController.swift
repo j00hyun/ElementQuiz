@@ -18,6 +18,11 @@ enum State {
     case score
 }
 
+enum Order {
+    case predictable
+    case randomize
+}
+
 class ViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var imageView: UIImageView!
@@ -27,9 +32,16 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var showAnswerButton: UIButton!
     @IBOutlet weak var nextButton: UIButton!
+    @IBOutlet weak var mistakeLabel: UILabel!
     
-    let fixedElementList = ["Carbon", "Gold", "Chlorine", "Sodium"]
-    var elementList: [String] = []
+    var fixedElementList: [Element] = [
+        Element(name: "Carbon"),
+        Element(name: "Gold"),
+        Element(name: "Chlorine"),
+        Element(name: "Sodium")
+    ]
+    
+    var elementList: [Element] = []
     
     var currentElementIndex = 0
     var mode: Mode = .flashCard {
@@ -51,12 +63,29 @@ class ViewController: UIViewController, UITextFieldDelegate {
     var answerIsCorrect = false
     var correctAnswerCount = 0
     
+    // 원소 순서 랜덤 여부
+    var order: Order = .predictable {
+        didSet {
+            setupOrder()
+        }
+    }
+    
+    // 원소당 틀린 평균 횟수
+    var averageMisses = 0
+    
     // 모드에 따라 앱 UI 변경 메서드를 호출한다.
     func updateUI() {
         // 모드에 관계없이 이미지 업데이트
-        let elementName = elementList[currentElementIndex]
+        let elementName = elementList[currentElementIndex].name
         let image = UIImage(named: elementName)
         imageView.image = image
+        
+        // 자주 틀린 문제 체크
+        if elementList[currentElementIndex].misstimes > averageMisses {
+            mistakeLabel.text = "most mistake !!"
+        } else {
+            mistakeLabel.text = ""
+        }
         
         // 모드에 따라 다른 메서드 호출
         switch mode {
@@ -156,7 +185,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        elementList = fixedElementList
+        order = .predictable
         mode = .flashCard
     }
 
@@ -186,9 +215,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func switchModes(_ sender: UISegmentedControl) {
         if orderSelector.selectedSegmentIndex == 0 {
-            elementList = fixedElementList
+            order = .predictable
         } else {
-            elementList = fixedElementList.shuffled()
+            order = .randomize
         }
         
         if modeSelector.selectedSegmentIndex == 0 {
@@ -212,17 +241,47 @@ class ViewController: UIViewController, UITextFieldDelegate {
         correctAnswerCount = 0
     }
     
+    // 문제 순서 설정
+    func setupOrder() {
+        switch order {
+        case .predictable:
+            elementList = fixedElementList
+        case .randomize:
+            elementList = fixedElementList.shuffled()
+        }
+    }
+    
     // 사용자가 키보드 엔터를 누르면 실행됨
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        let elementName = elementList[currentElementIndex].name
+        
         // 텍스트필드의 텍스트 가져옴
         let textFieldContents = textField.text!
         
         // 사용자가 정답을 맞췄는지 판별 후, 퀴즈 상태 업데이트
-        if textFieldContents.lowercased() == elementList[currentElementIndex].lowercased() {
+        if textFieldContents.lowercased() == elementName.lowercased() {
             answerIsCorrect = true
             correctAnswerCount += 1
         } else {
             answerIsCorrect = false
+            
+            // 해당 원소 틀린 횟수 1 증가
+            for element in fixedElementList {
+                if element.name == elementName {
+                    element.updateMissTimes()
+                }
+            }
+            
+            // 원소당 틀린 평균 횟수 초기화
+            var sumOfMisses = 0
+            
+            for element in fixedElementList {
+                sumOfMisses += element.misstimes
+            }
+            
+            averageMisses = sumOfMisses / fixedElementList.count
+            
+            print(averageMisses)
         }
         
         // 정답 화면에 보여줌
@@ -245,6 +304,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     // score 알림에서 ok버튼을 누를 경우 실행
     func scoreAlertDismissed(_ action: UIAlertAction) {
+        setupOrder()
         mode = .flashCard
     }
 }

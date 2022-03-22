@@ -20,6 +20,15 @@
                                 <rect key="frame" x="125" y="173" width="140" height="140"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f0F-Ko-dIS">
+                                <rect key="frame" x="52" y="472" width="125" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Show Answer"/>
+                                <connections>
+                                    <action selector="showAnswer:" destination="BYZ-38-t0r" eventType="touchUpInside" id="zyj-bc-iip"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RH4-VK-HC4">
                                 <rect key="frame" x="207" y="472" width="143" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -67,15 +76,13 @@
                                     <action selector="switchModes:" destination="BYZ-38-t0r" eventType="valueChanged" id="wA1-Kn-C35"/>
                                 </connections>
                             </segmentedControl>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f0F-Ko-dIS">
-                                <rect key="frame" x="52" y="472" width="125" height="31"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Mistake Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mId-jk-89k" userLabel="Mistake Label">
+                                <rect key="frame" x="110" y="148" width="169" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Show Answer"/>
-                                <connections>
-                                    <action selector="showAnswer:" destination="BYZ-38-t0r" eventType="touchUpInside" id="zyj-bc-iip"/>
-                                </connections>
-                            </button>
+                                <fontDescription key="fontDescription" name="Chalkduster" family="Chalkduster" pointSize="16"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -83,6 +90,7 @@
                     <connections>
                         <outlet property="answerLabel" destination="aun-QD-cBi" id="1Vg-RL-wLY"/>
                         <outlet property="imageView" destination="G8i-Ev-4KG" id="pbP-l1-1HR"/>
+                        <outlet property="mistakeLabel" destination="mId-jk-89k" id="yEn-5o-whn"/>
                         <outlet property="modeSelector" destination="Feo-Eb-x28" id="Lsg-yu-LqA"/>
                         <outlet property="nextButton" destination="RH4-VK-HC4" id="7Sx-m1-riK"/>
                         <outlet property="orderSelector" destination="Ahp-1T-lpQ" id="fke-Of-MYc"/>
