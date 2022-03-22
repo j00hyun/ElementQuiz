@@ -16,6 +16,7 @@ enum State {
     case question
     case answer
     case score
+    case delete
 }
 
 enum Order {
@@ -106,6 +107,14 @@ class ViewController: UIViewController, UITextFieldDelegate {
         nextButton.isEnabled = true
         nextButton.setTitle("Next Element", for: .normal)
         
+        if state == .question {
+            showAnswerButton.setTitle("Show Answer", for: .normal)
+            showAnswerButton.tintColor = .systemBlue
+        } else {
+            showAnswerButton.setTitle("Delete Element", for: .normal)
+            showAnswerButton.tintColor = .systemRed
+        }
+        
         // 텍스트필드, 키보드
         /*
          상태가 변경되지 않는데도 굳이 매번 호출해야하는 이유
@@ -120,6 +129,11 @@ class ViewController: UIViewController, UITextFieldDelegate {
             answerLabel.text = "?"
         } else {
             answerLabel.text = elementName
+        }
+        
+        // 삭제 알림 띄움
+        if state == .delete {
+            displayDeleteAlert()
         }
     }
     
@@ -144,6 +158,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
             nextButton.isEnabled = true
         case .score:
             nextButton.isEnabled = false
+        case .delete:
+            nextButton.isEnabled = false
         }
         
         // 텍스트필드, 키보드
@@ -160,6 +176,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
         case .score:
             textField.isHidden = true
             textField.resignFirstResponder()
+        case .delete:
+            textField.isHidden = true
+            textField.resignFirstResponder()
         }
         
         // 정답 라벨
@@ -173,6 +192,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 answerLabel.text = "❌\nCorrect Answer: " + elementName
             }
         case .score:
+            answerLabel.text = ""
+        case .delete:
             answerLabel.text = ""
         }
         
@@ -190,7 +211,11 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
 
     @IBAction func showAnswer(_ sender: UIButton) {
-        state = .answer
+        if state == .answer {
+            state = .delete
+        } else {
+            state = .answer
+        }
         
         updateUI()
     }
@@ -272,16 +297,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 }
             }
             
-            // 원소당 틀린 평균 횟수 초기화
-            var sumOfMisses = 0
-            
-            for element in fixedElementList {
-                sumOfMisses += element.misstimes
-            }
-            
-            averageMisses = sumOfMisses / fixedElementList.count
-            
-            print(averageMisses)
+            calculateMissAverage()
         }
         
         // 정답 화면에 보여줌
@@ -290,6 +306,17 @@ class ViewController: UIViewController, UITextFieldDelegate {
         updateUI()
         
         return true
+    }
+    
+    // 원소당 틀린 평균 횟수 초기화
+    func calculateMissAverage() {
+        var sumOfMisses = 0
+        
+        for element in fixedElementList {
+            sumOfMisses += element.misstimes
+        }
+        
+        averageMisses = sumOfMisses / fixedElementList.count
     }
     
     // 퀴즈점수를 보여주는 알림을 띄운다.
@@ -306,6 +333,47 @@ class ViewController: UIViewController, UITextFieldDelegate {
     func scoreAlertDismissed(_ action: UIAlertAction) {
         setupOrder()
         mode = .flashCard
+    }
+    
+    // 원소를 삭제할 것인지 물어보는 알림을 띄운다.
+    func displayDeleteAlert() {
+        let alert = UIAlertController(title: "Delete Element", message: "Are you sure you want to delete it?", preferredStyle: .alert)
+        let deleteAction = UIAlertAction(title: "Yes", style: .destructive, handler: deleteElement(_:))
+        let cancelAction = UIAlertAction(title: "No", style: .cancel, handler: deleteAlertCancel(_:))
+        
+        alert.addAction(cancelAction)
+        alert.addAction(deleteAction)
+        
+        present(alert, animated: true, completion: nil)
+    }
+    
+    // delete 알림에서 ok버튼을 누를 경우 실행
+    func deleteElement(_ action: UIAlertAction) {
+        
+        // 원소가 마지막 1개 밖에 안남은 상태일 때 삭제 거절 알림 띄움
+        if fixedElementList.count <= 1 {
+            
+            let alert = UIAlertController(title: "Error", message: "You can't delete the last element.", preferredStyle: .alert)
+            let dismissAction = UIAlertAction(title: "OK", style: .default, handler: deleteAlertCancel(_:))
+
+            alert.addAction(dismissAction)
+            
+            present(alert, animated: true, completion: nil)
+            
+        } else {
+            
+            fixedElementList.remove(at: currentElementIndex)
+            calculateMissAverage()
+            setupOrder()
+            mode = .flashCard
+            
+        }
+    }
+    
+    // delete 알림에서 no버튼을 누를 경우 실행
+    func deleteAlertCancel(_ action: UIAlertAction) {
+        state = .answer
+        updateUI()
     }
 }
 
