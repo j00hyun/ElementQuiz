@@ -46,11 +46,12 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Feo-Eb-x28">
-                                <rect key="frame" x="104" y="60" width="183" height="32"/>
+                                <rect key="frame" x="23" y="60" width="347" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <segments>
                                     <segment title="Flash Cards"/>
-                                    <segment title="Quiz"/>
+                                    <segment title="Free Response"/>
+                                    <segment title="Multiple Choice"/>
                                 </segments>
                                 <connections>
                                     <action selector="switchModes:" destination="BYZ-38-t0r" eventType="valueChanged" id="Kex-vf-JT7"/>
@@ -83,12 +84,42 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" changesSelectionAsPrimaryAction="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xeQ-j3-kNX" userLabel="Choice 1">
+                                <rect key="frame" x="20" y="407" width="107" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Choice 1"/>
+                                <connections>
+                                    <action selector="selectChoice:" destination="BYZ-38-t0r" eventType="touchUpInside" id="UUb-6r-fhY"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" changesSelectionAsPrimaryAction="YES" translatesAutoresizingMaskIntoConstraints="NO" id="f6J-SA-oDW" userLabel="Choice 2">
+                                <rect key="frame" x="142" y="407" width="107" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Choice 2"/>
+                                <connections>
+                                    <action selector="selectChoice:" destination="BYZ-38-t0r" eventType="touchUpInside" id="y88-BP-4sR"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" changesSelectionAsPrimaryAction="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qjN-xX-0BG" userLabel="Choice 3">
+                                <rect key="frame" x="263" y="407" width="107" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Choice 3"/>
+                                <connections>
+                                    <action selector="selectChoice:" destination="BYZ-38-t0r" eventType="touchUpInside" id="TXS-t0-knc"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <connections>
                         <outlet property="answerLabel" destination="aun-QD-cBi" id="1Vg-RL-wLY"/>
+                        <outlet property="choice1" destination="xeQ-j3-kNX" id="iDe-NG-BjV"/>
+                        <outlet property="choice2" destination="f6J-SA-oDW" id="2GG-AD-cGA"/>
+                        <outlet property="choice3" destination="qjN-xX-0BG" id="jbm-6I-jfr"/>
                         <outlet property="imageView" destination="G8i-Ev-4KG" id="pbP-l1-1HR"/>
                         <outlet property="mistakeLabel" destination="mId-jk-89k" id="yEn-5o-whn"/>
                         <outlet property="modeSelector" destination="Feo-Eb-x28" id="Lsg-yu-LqA"/>

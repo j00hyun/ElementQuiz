@@ -9,7 +9,8 @@ import UIKit
 
 enum Mode {
     case flashCard
-    case quiz
+    case freeResponse
+    case multiChoice
 }
 
 enum State {
@@ -34,6 +35,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var showAnswerButton: UIButton!
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var mistakeLabel: UILabel!
+    @IBOutlet weak var choice1: UIButton!
+    @IBOutlet weak var choice2: UIButton!
+    @IBOutlet weak var choice3: UIButton!
     
     var fixedElementList: [Element] = [
         Element(name: "Carbon"),
@@ -51,8 +55,10 @@ class ViewController: UIViewController, UITextFieldDelegate {
             switch mode {
             case .flashCard:
                 setupFlashCards()
-            case .quiz:
-                setupQuiz()
+            case .freeResponse:
+                setupFreeResponse()
+            case .multiChoice:
+                setupMultiChoice()
             }
             
             updateUI()
@@ -88,12 +94,19 @@ class ViewController: UIViewController, UITextFieldDelegate {
             mistakeLabel.text = ""
         }
         
+        // 선택지 숨기기
+        choice1.isHidden = true
+        choice2.isHidden = true
+        choice3.isHidden = true
+        
         // 모드에 따라 다른 메서드 호출
         switch mode {
         case .flashCard:
             updateFlashCardUI(elementName: elementName)
-        case .quiz:
-            updateQuizUI(elementName: elementName)
+        case .freeResponse:
+            updateFreeResponseUI(elementName: elementName)
+        case .multiChoice:
+            updateMultiChoiceUI(elementName: elementName)
         }
     }
     
@@ -138,7 +151,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     // 퀴즈 모드에서 앱 UI를 변경한다.
-    func updateQuizUI(elementName: String) {
+    func updateFreeResponseUI(elementName: String) {
         // segment 컨트롤
         modeSelector.selectedSegmentIndex = 1
         
@@ -203,6 +216,83 @@ class ViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    func updateMultiChoiceUI(elementName: String) {
+        // segment 컨트롤
+        modeSelector.selectedSegmentIndex = 2
+        
+        // 버튼
+        showAnswerButton.isHidden = true
+        
+        if currentElementIndex == elementList.count - 1 {
+            nextButton.setTitle("Show Score", for: .normal)
+        } else {
+            nextButton.setTitle("Next Question", for: .normal)
+        }
+        
+        switch state {
+        case .question:
+            nextButton.isEnabled = false
+        case .answer:
+            nextButton.isEnabled = true
+        case .score:
+            nextButton.isEnabled = false
+        case .delete:
+            nextButton.isEnabled = false
+        }
+        
+        // 텍스트필드, 키보드
+        textField.isHidden = true
+        textField.resignFirstResponder()
+        
+        // 선택지
+        let choices = [choice1, choice2, choice3]
+        
+        if state == .question {
+            for choice in choices {
+                choice!.isHidden = false
+                choice!.isEnabled = true
+                choice!.isSelected = false
+            }
+            
+            let shuffledChoices = choices.shuffled()
+            var elements = elementList
+            
+            shuffledChoices[0]!.setTitle(elementName, for: .normal)
+            elements.remove(at: currentElementIndex)
+            elements = elements.shuffled()
+            
+            for i in 1 ... 2 {
+                shuffledChoices[i]!.setTitle(elements.popLast()?.name, for: .normal)
+            }
+        } else if state == .answer {
+            for choice in choices {
+                choice!.isHidden = false
+                choice!.isEnabled = false
+            }
+        }
+        
+        // 정답 라벨
+        switch state {
+        case .question:
+            answerLabel.text = ""
+        case .answer:
+            if answerIsCorrect {
+                answerLabel.text = "Correct!"
+            } else {
+                answerLabel.text = "❌\nCorrect Answer: " + elementName
+            }
+        case .score:
+            answerLabel.text = ""
+        case .delete:
+            answerLabel.text = ""
+        }
+        
+        // 점수 보여줌
+        if state == .score {
+            displayScoreAlert()
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -226,7 +316,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         if currentElementIndex >= elementList.count {
             currentElementIndex = 0
             
-            if mode == .quiz {
+            if mode == .freeResponse || mode == .multiChoice {
                 state = .score
                 updateUI()
                 return
@@ -247,8 +337,10 @@ class ViewController: UIViewController, UITextFieldDelegate {
         
         if modeSelector.selectedSegmentIndex == 0 {
             mode = .flashCard
+        } else if modeSelector.selectedSegmentIndex == 1 {
+            mode = .freeResponse
         } else {
-            mode = .quiz
+            mode = .multiChoice
         }
     }
     
@@ -258,8 +350,16 @@ class ViewController: UIViewController, UITextFieldDelegate {
         currentElementIndex = 0
     }
     
-    // 퀴즈 모드 초기화
-    func setupQuiz() {
+    // 키보드 입력 퀴즈 모드 초기화
+    func setupFreeResponse() {
+        state = .question
+        currentElementIndex = 0
+        answerIsCorrect = false
+        correctAnswerCount = 0
+    }
+    
+    // 선택 퀴즈 모드 초기화
+    func setupMultiChoice() {
         state = .question
         currentElementIndex = 0
         answerIsCorrect = false
@@ -278,13 +378,31 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     // 사용자가 키보드 엔터를 누르면 실행됨
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        answerProcess(myAnswer: textField.text!)
+        
+        // 정답 화면에 보여줌
+        state = .answer
+        
+        updateUI()
+        
+        return true
+    }
+    
+    // multiple choice 모드에서 정답 선택하면 실행
+    @IBAction func selectChoice(_ sender: UIButton) {
+        answerProcess(myAnswer: sender.currentTitle!)
+        
+        // 정답 화면에 보여줌
+        state = .answer
+        
+        updateUI()
+    }
+    
+    // 퀴즈모드에서 정답 맞는지 확인
+    func answerProcess(myAnswer: String) {
         let elementName = elementList[currentElementIndex].name
         
-        // 텍스트필드의 텍스트 가져옴
-        let textFieldContents = textField.text!
-        
-        // 사용자가 정답을 맞췄는지 판별 후, 퀴즈 상태 업데이트
-        if textFieldContents.lowercased() == elementName.lowercased() {
+        if myAnswer.lowercased() == elementName.lowercased() {
             answerIsCorrect = true
             correctAnswerCount += 1
         } else {
@@ -299,13 +417,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
             
             calculateMissAverage()
         }
-        
-        // 정답 화면에 보여줌
-        state = .answer
-        
-        updateUI()
-        
-        return true
     }
     
     // 원소당 틀린 평균 횟수 초기화
